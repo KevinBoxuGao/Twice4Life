@@ -17,7 +17,7 @@ ON_CUDA     = torch.cuda.is_available()
 
 if ON_CUDA:
     print("GPU available. Training on GPU...")
-    device = "cuda:0"
+    device = "cuda"
 else:
     print("GPU not available. Training on CPU...")
     device = "cpu"
@@ -40,42 +40,46 @@ min_loss = -np.inf
 for epoch in range(START_EPOCH, N_EPOCHS + 1):
     # Load data
     for i in range(1, 5):
-        song = torch.Tensor(np.load("npydata/audio" + str(i) + ".npy"), device = device)
+        song = torch.Tensor(np.load("npydata/audio" + str(i) + ".npy")).to(device)
         outputs = []
 
         bucket = song[0]
-        bucket = np.fft.fft(bucket)
+        bucket = np.fft.fft(bucket.cpu().numpy())
         bucket = bucket[:4096]
-        bucket = torch.Tensor([x.real for x in bucket] + [x.imag for x in bucket]).view(-1)
+        bucket = torch.Tensor([x.real for x in bucket] + [x.imag for x in bucket]).to(device).view(-1)
         for j in range(1, len(song)):
             optimizer.zero_grad()
 
             max_bucket = max(bucket).clone()
             bucket /= max_bucket
 
-            output = model.forward(bucket) * max_bucket
-            outputs.append(output)
+            output = (model.forward(bucket) * max_bucket).view(-1)
+            outputs.append(output.detach().cpu().numpy())
 
             next_bucket = song[j]
-            next_bucket = np.fft.fft(next_bucket)
+            next_bucket = np.fft.fft(next_bucket.cpu().numpy())
             next_bucket = next_bucket[:4096]
-            next_bucket = torch.Tensor([x.real for x in next_bucket] + [x.imag for x in next_bucket]).view(-1)
+            next_bucket = torch.Tensor([x.real for x in next_bucket] + [x.imag for x in next_bucket]).to(device).view(-1)
 
-            loss = criterion(output.view(-1), next_bucket)
+            loss = criterion(output, next_bucket)
             loss.backward(retain_graph = True)
             optimizer.step()
-            print("Step")
 
             bucket = next_bucket
+        outputs = np.asarray(outputs)
+        print(outputs.shape)
         for j in range(len(outputs)):
-            outputs[j] = torch.Tensor([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)])
-            outputs[j] = outputs[j] + (-1*outputs[j])
-            outputs[j] = torch.Tensor(np.fft.ifft(outputs[j].numpy()))
+            outputs[j] = np.array([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)] + [(0+0j)]*4096)
+            outputs[j] = np.append(outputs[j][:4096], (-1*outputs[j][:4096]))
+            outputs[j] = np.fft.ifft(outputs[j])
             for k in range(len(outputs[j])):
                 outputs[j][k] = outputs[j][k].real
-        outputs = outputs.view(-1, 1)
-        torchaudio.save("out/epoch" + str(epoch) + ".wav", outputs)
+        outputs = torch.Tensor(outputs.reshape(-1)).view(1, -1)
+        torchaudio.save("out/epoch" + str(epoch) + ".wav", outputs, sample_rate = 16000)
         if loss < min_loss:
             min_loss = loss
             torch.save(model.state_dict(), "models/generator_" + MODEL_ID + ".pth")
+        print("Epoch:", epoch)
+        print("---------------")
         print("Loss:", loss.item())
+        print()

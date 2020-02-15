@@ -9,8 +9,8 @@ class lstm_model(nn.Module):
         self.fc1 = nn.Linear(8192, n_hidden)
         self.lstm = nn.LSTM(n_hidden, n_hidden, n_lstm)
         self.fc2 = nn.Linear(n_hidden, 8192)
-        self.hidden = torch.randn(n_lstm, 1, n_hidden)
-        self.cell = torch.randn(n_lstm, 1, n_hidden)
+        self.hidden = torch.randn(n_lstm, 1, n_hidden).cuda()
+        self.cell = torch.randn(n_lstm, 1, n_hidden).cuda()
     
     def forward(self, x):
         # x must have a shape (8192)

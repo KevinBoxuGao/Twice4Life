@@ -1,0 +1,9 @@
+GPU available. Training on GPU...
+/usr/local/lib/python3.5/dist-packages/torch/nn/functional.py:1340: UserWarning: nn.functional.tanh is deprecated. Use torch.tanh instead.
+  warnings.warn("nn.functional.tanh is deprecated. Use torch.tanh instead.")
+Traceback (most recent call last):
+  File "train.py", line 70, in <module>
+    outputs[j] = torch.Tensor([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)]).to(device)
+  File "train.py", line 70, in <listcomp>
+    outputs[j] = torch.Tensor([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)]).to(device)
+IndexError: index 0 is out of bounds for dimension 0 with size 0
