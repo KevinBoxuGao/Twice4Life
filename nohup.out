@@ -7,3 +7,4 @@ Traceback (most recent call last):
   File "train.py", line 70, in <listcomp>
     outputs[j] = torch.Tensor([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)]).to(device)
 IndexError: index 0 is out of bounds for dimension 0 with size 0
+GPU available. Training on GPU...
