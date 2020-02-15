@@ -62,7 +62,6 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
             optimizer.step()
 
             ctr += 1
-            print("Step", ctr)
 
             bucket = next_bucket
         outputs = np.asarray(outputs)
@@ -80,5 +79,4 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
         print("Epoch:", epoch, "-", i)
         print("------------------")
         print("Loss:", loss.item())
-        print("Difference (Real - Fake):", torch.mean(song.view(-1) - outputs.view(-1)))
         print()

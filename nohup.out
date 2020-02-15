@@ -8,3 +8,12 @@ Traceback (most recent call last):
     outputs[j] = torch.Tensor([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)]).to(device)
 IndexError: index 0 is out of bounds for dimension 0 with size 0
 GPU available. Training on GPU...
+GPU available. Training on GPU...
+train.py:70: ComplexWarning: Casting complex values to real discards the imaginary part
+  outputs[j] = np.array([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)] + [(0+0j)]*4096, dtype = np.complex128)
+train.py:71: ComplexWarning: Casting complex values to real discards the imaginary part
+  outputs[j] = np.fft.ifft(outputs[j])
+Epoch: 2 - 1
+------------------
+Loss: 5.0390424728393555
+
