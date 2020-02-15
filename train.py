@@ -8,8 +8,8 @@ from models import *
 # Constants
 MODEL_ID    = "0"
 DATA_PATH   = "npydata/"
-START_EPOCH = 1
-LEARN_RATE  = 0.1
+START_EPOCH = 2
+LEARN_RATE  = 0.01
 N_HIDDEN    = 1024
 N_EPOCHS    = 200
 SAMPLE      = 20
@@ -50,10 +50,7 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
         for j in range(1, len(song)):
             optimizer.zero_grad()
 
-            max_bucket = max(bucket).clone()
-            bucket /= max_bucket
-
-            output = (model.forward(bucket) * max_bucket).view(-1)
+            output = (model.forward(bucket)).view(-1)
             outputs.append(output.detach().cpu().numpy())
 
             next_bucket = song[j]
@@ -67,10 +64,10 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
 
             bucket = next_bucket
         outputs = np.asarray(outputs)
-        print(outputs.shape)
+
         for j in range(len(outputs)):
             outputs[j] = np.array([complex(outputs[j][k], outputs[j][4096:][k]) for k in range(4096)] + [(0+0j)]*4096)
-            outputs[j] = np.append(outputs[j][:4096], (-1*outputs[j][:4096]))
+            outputs[j] = np.append(outputs[j][:4097], (-1*outputs[j][4095:0:-1]))
             outputs[j] = np.fft.ifft(outputs[j])
             for k in range(len(outputs[j])):
                 outputs[j][k] = outputs[j][k].real

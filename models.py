@@ -16,7 +16,7 @@ class lstm_model(nn.Module):
         # x must have a shape (8192)
         out = self.fc1(x)
         out, (self.hidden, self.cell) = self.lstm(out.view(1, 1, -1), (self.hidden, self.cell))
-        out = F.tanh(self.fc2(out))
+        out = self.fc2(out)
         return out
 
 
