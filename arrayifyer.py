@@ -15,8 +15,8 @@ for file in files:
     audio, sample_rate = torchaudio.load(file)
     audio = torchaudio.transforms.Resample(orig_freq = sample_rate, new_freq = 16000)(audio).t().numpy()
     audio = mix(audio)
-    audio = audio[:len(audio) - len(audio)%8192]
-    audio = audio.reshape(len(audio)//8192, 8192)
+    audio = audio[:len(audio) - len(audio)%4096]
+    audio = audio.reshape(len(audio)//4096, 4096)
     np.save("npydata/audio" + str(ctr) + ".npy", audio)
     ctr += 1
     
