@@ -12,8 +12,8 @@ import soundfile as sf
 # Constants
 MODEL_ID    = "0"
 DATA_PATH   = "npydata/"
-START_EPOCH = 2
-LEARN_RATE  = 0.01
+START_EPOCH = 6
+LEARN_RATE  = 0.04
 N_HIDDEN    = 1024
 N_EPOCHS    = 200
 SAMPLE      = 20
@@ -40,14 +40,15 @@ def pack_complex_array(_fft):
     [(ret.append(x.real), ret.append(x.imag)) for x in _fft.tolist()]
     return np.array(ret)
 def packed_fft_to_wav(_fft, sample_rate, path):
-    sf.write(path, ifft(np.array([unpack(x) for x in _fft.tolist()])), sample_rate)
+    sf.write(path, ifft(np.array([unpack(x) for x in _fft])), sample_rate)
 def ifft(_fft):
     return np.concatenate([[y.real for y in np.fft.ifft(x)] for x in _fft])
 
 # Load/Create models
-model = lstm_model2(N_HIDDEN, n_lstm = 4)
+model = lstm_model(N_HIDDEN, n_lstm = 4)
 try:
     model.load_state_dict(torch.load("models/generator_" + MODEL_ID + ".pth"))
+    print("model found")
 except FileNotFoundError:
     torch.save(model.state_dict(), "models/generator_" + MODEL_ID + ".pth")
 
@@ -57,37 +58,39 @@ if ON_CUDA:
 optimizer = torch.optim.Adam(model.parameters(), lr = LEARN_RATE)
 criterion = nn.MSELoss()
 
-min_loss = -np.inf
+min_loss = np.inf
 for epoch in range(START_EPOCH, N_EPOCHS + 1):
     # Load data
-    for i in range(1, 68):
+    for i in range(1, 3):
         song = torch.Tensor(np.load("npydata/audio" + str(i) + ".npy")).to(device)
         outputs = []
-
-        bucket = song[0]
-        bucket = np.fft.fft(bucket.cpu().numpy())
+        buckets = fft(song.cpu().numpy(), 8192)
+        bucket = buckets[0]
+        print(bucket.shape)
         bucket = bucket[:4096]
         bucket = torch.Tensor([x.real for x in bucket] + [x.imag for x in bucket]).to(device).view(-1)
+        total_loss = 0
         for j in range(1, len(song)):
             optimizer.zero_grad()
 
             output = model.forward(bucket).view(-1)
             outputs.append(output.detach().cpu().numpy())
 
-            next_bucket = song[j]
-            next_bucket = np.fft.fft(next_bucket.cpu().numpy())
+            next_bucket = buckets[j]
             next_bucket = next_bucket[:4096]
             next_bucket = torch.Tensor([x.real for x in next_bucket] + [x.imag for x in next_bucket]).to(device).view(-1)
 
             loss = criterion(output.view(-1), next_bucket)
             loss.backward(retain_graph = True)
+            total_loss += loss.item()
             optimizer.step()
             bucket = next_bucket
-        f = fft(outputs, 8192)
-        packed_fft_to_wav(f, 16000, "out/epoch" + str(epoch) + "_" + str(i) + ".wav")
-        model.reset()
-        if loss < min_loss:
-            min_loss = loss
+        packed_fft_to_wav(outputs, 16000, "out/epoch" + str(epoch) + "_" + str(i) + ".wav")
+        model.hidden = torch.randn(model.n_lstm, 1, model.n_hidden).cuda()
+        model.cell = torch.randn(model.n_lstm, 1, model.n_hidden).cuda()
+        avg_loss = total_loss / (len(song) - 1)
+        if avg_loss < min_loss:
+            min_loss = avg_loss
             torch.save(model.state_dict(), "models/generator_" + MODEL_ID + ".pth")
         print("Epoch:", epoch, i)
-        print("Loss:", loss.item())
+        print("Loss:", avg_loss)

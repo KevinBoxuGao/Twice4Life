@@ -27,9 +27,9 @@ def ifft(_fft):
 
 
 f = fft(data, 8192)
-
+print(f.shape)
 
 # plt.figure()
 # plt.plot(song)
 # plt.show()
-packed_fft_to_wav(f, 16000, "testfile1.wav")
+#packed_fft_to_wav(f, 16000, "testfile1.wav")
