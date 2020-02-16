@@ -9,7 +9,7 @@ import {
 import "./App.scss";
 
 //pages
-import Home from "pages/Home";
+import Home from "pages/home";
 import GenericNotFound from "pages/pagenotfound";
 
 //function component
