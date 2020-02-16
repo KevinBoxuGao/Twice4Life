@@ -25,9 +25,9 @@ function Home() {
         timerUp = true
       }
     }, 1000);
-
+    //https://twice4life.kevinboxugao.repl.co/getfile
     setLoading(true);
-    fetch("https://twice4life.kevinboxugao.repl.co/getfile", {mode: 'cors'})
+    fetch("34.69.211.86", {mode: 'cors'})
     .then(response => response.blob())
     .then(blob => {
       var url = window.URL.createObjectURL(blob);
