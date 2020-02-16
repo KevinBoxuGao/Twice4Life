@@ -12,15 +12,19 @@ class lstm_model(nn.Module):
         self.lstm = nn.LSTM(n_hidden, n_hidden, n_lstm, dropout=0.1)
         self.fc2 = nn.Sequential(nn.Dropout(0.1),
                                 nn.Linear(n_hidden, 8194))
-        self.hidden = torch.randn(n_lstm, 1, n_hidden).cuda()
-        self.cell = torch.randn(n_lstm, 1, n_hidden).cuda()
+        self.hidden = None
+        self.cell = None
         self.n_hidden = n_hidden
         self.n_lstm = n_lstm
     
     def forward(self, x):
         # x must have a shape (8192)
         out = self.fc1(x)
-        out, (self.hidden, self.cell) = self.lstm(out.view(1, 1, -1), (self.hidden, self.cell))
+        if self.hidden != None:
+          out, (self.hidden, self.cell) = self.lstm(out.view(1, 1, -1), (self.hidden, self.cell))
+        else:
+          out, (self.hidden, self.cell) = self.lstm(out.view(1, 1, -1), None)
+
         out = self.fc2(out)
         return out
     

@@ -80,8 +80,8 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
             optimizer.step()
             bucket = next_bucket
         packed_fft_to_wav(outputs, 16000, "out/epoch" + str(epoch) + "_" + str(i) + ".wav")
-        model.hidden = torch.randn(model.n_lstm, 1, model.n_hidden).cuda()
-        model.cell = torch.randn(model.n_lstm, 1, model.n_hidden).cuda()
+        model.hidden = None
+        model.cell = None
         avg_loss = total_loss / (len(song) - 1)
         if avg_loss < min_loss:
             min_loss = avg_loss
