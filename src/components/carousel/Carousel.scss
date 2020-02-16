@@ -1,0 +1,53 @@
+
+
+.image-overlay {
+    display: inline-block;
+    position: relative;
+    opacity: 0.5;
+    overflow: hidden;
+    min-height: 100%;
+    background-color: black;
+}
+
+.fulldiv {
+    height: 100%;
+    min-width: 100vw !important;
+}
+
+.slideshow {
+    min-height:100%;
+    min-width: 100vw !important;
+    overflow: hidden;
+}
+
+
+.slideshow-item {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .slideshow-item {
+        width: auto;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+    .slideshow {
+        overflow-x: hidden;
+    }
+
+}
+
+@media (max-width: 576px) {
+    .slideshow-item {
+        height: auto;
+        position: relative;
+        overflow: hidden;
+        min-width: 200vw;
+    }
+}
+
+
+.carousel-item {
+    min-height: 100vh !important;
+    overflow-y: hidden;
+}

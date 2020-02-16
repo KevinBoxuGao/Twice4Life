@@ -1,0 +1,12 @@
+.success-page {
+    margin-top: 40vh;
+}
+
+.audio-player, source {
+    outline: none;
+    &:active, &:focus {
+        outline: none;
+        border: none;
+    }
+}
+

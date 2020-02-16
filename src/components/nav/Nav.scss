@@ -1,0 +1,26 @@
+.nav-title {
+    text-align: center;
+    color: #ad9878;
+    z-index: 10000000;
+    &:hover {
+        outline:none;
+        border:none;
+        color: #ad9878;
+        text-decoration: none;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+.nav {
+    display: inline-block;
+    position: fixed;
+    z-index: 10000000;
+    text-align: center;
+    h1 {
+        padding: 0.5rem;
+        margin-left: 0.5rem;
+    }
+}

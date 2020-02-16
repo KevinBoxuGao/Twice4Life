@@ -1,0 +1,21 @@
+.generate-button {
+    font-size: 1.5rem;
+    color: #fcf5ea;
+    background-color: #ad9878;
+    border-radius: 1rem;
+    border: none;
+    &:hover {
+        color:#4a2b10;
+        background-color: #d5c9b1;
+    }
+    &:active {
+        outline: none;
+        box-shadow: none;
+        color:#fcf5ea;
+        background-color: #ad9878;
+    }
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+}
