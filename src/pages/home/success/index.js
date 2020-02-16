@@ -9,7 +9,7 @@ function Success(props) {
     <Container className="success-page">
       <Row bsPrefix={"col-centered"}>
         <Col sm={12} bsPrefix={"text-center my-auto center-block"}>
-          <audio className="audio-player" controls download="SongFile.wav">
+          <audio id="player" className="audio-player" controls download="SongFile.wav">
             <source src={props.url} type="audio/wav"/>
           </audio>
         </Col>
