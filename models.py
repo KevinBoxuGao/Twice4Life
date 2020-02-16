@@ -7,9 +7,11 @@ import soundfile as sf
 class lstm_model(nn.Module):
     def __init__(self, n_hidden, n_lstm = 1):
         super().__init__()
-        self.fc1 = nn.Linear(8192, n_hidden)
-        self.lstm = nn.LSTM(n_hidden, n_hidden, n_lstm)
-        self.fc2 = nn.Linear(n_hidden, 8192)
+        self.fc1 = nn.Sequential(nn.Linear(8194, n_hidden),
+                                nn.Dropout(0.1))
+        self.lstm = nn.LSTM(n_hidden, n_hidden, n_lstm, dropout=0.1)
+        self.fc2 = nn.Sequential(nn.Dropout(0.1),
+                                nn.Linear(n_hidden, 8194))
         self.hidden = torch.randn(n_lstm, 1, n_hidden).cuda()
         self.cell = torch.randn(n_lstm, 1, n_hidden).cuda()
         self.n_hidden = n_hidden

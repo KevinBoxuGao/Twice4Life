@@ -10,8 +10,8 @@ def mix(audio):
 path = os.path.realpath("data/small_data")
 files = [path + "/" + file for file in os.listdir(path)]
 
-ctr = 62
-for file in files[62:]:
+ctr = 5
+for file in files[4:11]:
     print(file)
     audio, sample_rate = torchaudio.load(file)
     audio = torchaudio.transforms.Resample(orig_freq = sample_rate, new_freq = 16000)(audio).t().numpy()

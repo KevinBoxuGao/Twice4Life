@@ -10,9 +10,9 @@ from models import *
 import soundfile as sf
 
 # Constants
-MODEL_ID    = "0"
+MODEL_ID    = "1"
 DATA_PATH   = "npydata/"
-START_EPOCH = 6
+START_EPOCH = 7
 LEARN_RATE  = 0.04
 N_HIDDEN    = 1024
 N_EPOCHS    = 200
@@ -45,7 +45,7 @@ def ifft(_fft):
     return np.concatenate([[y.real for y in np.fft.ifft(x)] for x in _fft])
 
 # Load/Create models
-model = lstm_model(N_HIDDEN, n_lstm = 4)
+model = lstm_model(N_HIDDEN, n_lstm = 6)
 try:
     model.load_state_dict(torch.load("models/generator_" + MODEL_ID + ".pth"))
     print("model found")
@@ -65,22 +65,16 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
         song = torch.Tensor(np.load("npydata/audio" + str(i) + ".npy")).to(device)
         outputs = []
         buckets = fft(song.cpu().numpy(), 8192)
-        bucket = buckets[0]
+        bucket = torch.Tensor(buckets[0]).to(device)
         print(bucket.shape)
-        bucket = bucket[:4096]
-        bucket = torch.Tensor([x.real for x in bucket] + [x.imag for x in bucket]).to(device).view(-1)
         total_loss = 0
-        for j in range(1, len(song)):
+        for j in range(1, len(song) // 2):
             optimizer.zero_grad()
-
             output = model.forward(bucket).view(-1)
             outputs.append(output.detach().cpu().numpy())
 
-            next_bucket = buckets[j]
-            next_bucket = next_bucket[:4096]
-            next_bucket = torch.Tensor([x.real for x in next_bucket] + [x.imag for x in next_bucket]).to(device).view(-1)
-
-            loss = criterion(output.view(-1), next_bucket)
+            next_bucket = torch.Tensor(buckets[j]).to(device)
+            loss = criterion(output, next_bucket)
             loss.backward(retain_graph = True)
             total_loss += loss.item()
             optimizer.step()
@@ -93,4 +87,4 @@ for epoch in range(START_EPOCH, N_EPOCHS + 1):
             min_loss = avg_loss
             torch.save(model.state_dict(), "models/generator_" + MODEL_ID + ".pth")
         print("Epoch:", epoch, i)
-        print("Loss:", avg_loss)
+        print("Loss:", avg_loss) 
