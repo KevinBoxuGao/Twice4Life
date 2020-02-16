@@ -16,8 +16,8 @@ function Landing(props) {
         <SlideShow className="slideshow"/>
         <Row className="landing-content" bsPrefix={"centered"}>
           <Col bsPrefix={"col-12"}>
-            <p className="description">Generate a new TWICE song using the power of artificial intelligence.</p>
-            <GenerateButton fetch={props.fetch}/>
+            <p className="description landing-item">Generate a new TWICE song using the power of artificial intelligence.</p>
+            <GenerateButton className="landing-item" fetch={props.fetch}/>
           </Col>
         </Row>
     </Container>

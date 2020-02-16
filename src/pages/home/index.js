@@ -31,7 +31,7 @@ function Home() {
     //34.69.211.86
     //https://twice4life.kevinboxugao.repl.co/getfile
     setLoading(true);
-    fetch("34.69.211.86", {mode: 'cors'})
+    fetch("https://twice4life.kevinboxugao.repl.co/getfile", {mode: 'cors'})
     .then(response => response.blob())
     .then(blob => {
       var url = window.URL.createObjectURL(blob);
