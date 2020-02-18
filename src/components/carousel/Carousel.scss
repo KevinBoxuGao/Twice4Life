@@ -1,53 +1,47 @@
-
-
-.image-overlay {
-    display: inline-block;
-    position: relative;
-    opacity: 0.5;
-    overflow: hidden;
-    min-height: 100%;
-    background-color: black;
-}
-
-.fulldiv {
-    height: 100%;
-    min-width: 100vw !important;
+//slideshow
+body {
+  overflow-y: hidden;
 }
 
 .slideshow {
-    min-height:100%;
-    min-width: 100vw !important;
-    overflow: hidden;
+  min-width: 100%;
+  overflow-y: hidden;
 }
-
 
 .slideshow-item {
+  width: 100%;
+  overflow: hidden;
+}
+
+.slideshow-img {
+  overflow: hidden;
+  width: 100%;
+}
+
+@media (max-width: 75vh) {
+  .slideshow-img {
+    height: 100%;
+    position: relative;
+    transform: translateX(-50%);
+    width: auto;
     overflow: hidden;
+  }
 }
 
-@media (max-width: 768px) {
-    .slideshow-item {
-        width: auto;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-    .slideshow {
-        overflow-x: hidden;
-    }
-
+@media (max-width: 120vh) and (min-width: 75vh) {
+  .slideshow-img {
+    height: auto;
+    overflow: hidden;
+    min-width: 200%;
+  }
 }
 
-@media (max-width: 576px) {
-    .slideshow-item {
-        height: auto;
-        position: relative;
-        overflow: hidden;
-        min-width: 200vw;
-    }
-}
-
-
-.carousel-item {
-    min-height: 100vh !important;
-    overflow-y: hidden;
+@media (max-width: 150vh) and (min-width: 120vh) {
+  .slideshow-img {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: auto;
+  }
 }
