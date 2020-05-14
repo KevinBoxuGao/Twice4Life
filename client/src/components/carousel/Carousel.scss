@@ -1,0 +1,47 @@
+//slideshow
+body {
+  overflow-y: hidden;
+}
+
+.slideshow {
+  min-width: 100%;
+  overflow-y: hidden;
+}
+
+.slideshow-item {
+  width: 100%;
+  overflow: hidden;
+}
+
+.slideshow-img {
+  overflow: hidden;
+  width: 100%;
+}
+
+@media (max-width: 75vh) {
+  .slideshow-img {
+    height: 100%;
+    position: relative;
+    transform: translateX(-50%);
+    width: auto;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 120vh) and (min-width: 75vh) {
+  .slideshow-img {
+    height: auto;
+    overflow: hidden;
+    min-width: 200%;
+  }
+}
+
+@media (max-width: 150vh) and (min-width: 120vh) {
+  .slideshow-img {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: auto;
+  }
+}

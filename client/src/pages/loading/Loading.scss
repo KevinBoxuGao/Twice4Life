@@ -1,0 +1,21 @@
+.loading-screen {
+  width: 100vw;
+  height: 100vh;
+  background-color: #debf9f;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000000;
+  display: inline-block;
+}
+
+.loading-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loading-message {
+  font-size: 2rem;
+}
